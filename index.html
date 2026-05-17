@@ -1,45 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Typing Speed Test</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeoType - Typing Speed Test</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="app">
-  <h1>Typing Speed Test</h1>
+<div class="container">
 
-  <label>Time:
-      <select id="timeSelect">
-          <option value="60">1 Min</option>
-          <option value="120">2 Min</option>
-          <option value="180">3 Min</option>
-      </select>
-  </label>
+  <div class="top">
+    <h1 class="title">⌨ NeoType</h1>
 
-  <label>Paragraph:
-    <select id="paragraphSelect">
-      <option value="1">20 Words</option>
-      <option value="2">40 Words</option>
-      <option value="3">60 Words</option>
-      <option value="4">80 Words</option>
-      <option value="5">100 Words</option>
-    </select>
-  </label>
+    <div class="controls">
 
-  <div id="textDisplay" class="text-display"></div>
+      <div class="control-box">
+        <label>Time</label>
+        <select id="timeSelect">
+          <option value="60">1 Minute</option>
+          <option value="120">2 Minutes</option>
+          <option value="180">3 Minutes</option>
+        </select>
+      </div>
+
+      <div class="control-box">
+        <label>Words</label>
+        <select id="wordSelect">
+          <option value="20">20 Words</option>
+          <option value="40">40 Words</option>
+          <option value="60">60 Words</option>
+          <option value="80">80 Words</option>
+          <option value="100">100 Words</option>
+        </select>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="text-box" id="textDisplay"></div>
+
   <textarea id="inputField" placeholder="Start typing here..."></textarea>
 
   <div class="stats">
-    <p>Time: <span id="time">60</span>s</p>
-    <p>WPM: <span id="wpm">0</span></p>
-    <p>Accuracy: <span id="accuracy">100</span>%</p>
+
+    <div class="card">
+      <h2 id="time">60</h2>
+      <p>Seconds Left</p>
+    </div>
+
+    <div class="card">
+      <h2 id="wpm">0</h2>
+      <p>Words Per Minute</p>
+    </div>
+
+    <div class="card">
+      <h2 id="accuracy">100%</h2>
+      <p>Accuracy</p>
+    </div>
+
   </div>
 
-  <button id="restartBtn">Restart</button>
+  <div class="buttons">
+    <button class="start" id="startBtn">Start Test</button>
+    <button class="restart" id="restartBtn">Restart</button>
+  </div>
+
 </div>
 
 <script src="script.js"></script>
+
 </body>
 </html>

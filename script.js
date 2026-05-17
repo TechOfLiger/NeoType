@@ -1,104 +1,177 @@
+const paragraphs = [
+  "Technology is transforming the modern world rapidly and creating opportunities for innovation and growth in every industry today.",
+
+  "Programming helps students develop problem solving skills logical thinking creativity and the ability to build real world applications.",
+
+  "Artificial intelligence machine learning and robotics are shaping the future of healthcare education transportation and business systems.",
+
+  "Consistency discipline and continuous learning are the most important habits required to become successful in any technical career.",
+
+  "Web development combines creativity and coding skills to design beautiful fast responsive and user friendly digital experiences."
+];
+
 const textDisplay = document.getElementById("textDisplay");
 const inputField = document.getElementById("inputField");
-const timeTag = document.getElementById("time");
-const wpmTag = document.getElementById("wpm");
-const accuracyTag = document.getElementById("accuracy");
+const timeElement = document.getElementById("time");
+const wpmElement = document.getElementById("wpm");
+const accuracyElement = document.getElementById("accuracy");
 const restartBtn = document.getElementById("restartBtn");
-const paragraphSelect = document.getElementById("paragraphSelect");
+const startBtn = document.getElementById("startBtn");
 const timeSelect = document.getElementById("timeSelect");
+const wordSelect = document.getElementById("wordSelect");
 
-let TEST_TIME = 60;
-let timeLeft = TEST_TIME;
-let timer = null;
-let started = false;
+let timer;
+let timeLeft;
+let isTyping = false;
+let currentText = "";
+let mistakes = 0;
 
-// Paragraphs for different lengths
-const paragraphs = {
-  1: "This is a simple paragraph with twenty words in total for practice typing test purpose only.",
-  2: "Typing is a skill that improves with consistent practice. This forty-word paragraph will help you measure your typing speed and accuracy efficiently during your tests.",
-  3: "Improve your coding skills by practicing typing regularly. This sixty-word paragraph provides a challenge to measure your typing speed and to see how accurately you can type under time pressure. Keep focusing on each character carefully to get better results.",
-  4: "Typing speed and accuracy are essential skills for programmers and writers alike. This eighty-word paragraph is designed to test both typing speed and precision over a longer stretch of text, helping to build muscle memory and focus for high-pressure scenarios. Stay consistent with practice and track your progress regularly.",
-  5: "Professional typists need to maintain both speed and accuracy. This hundred-word paragraph is intentionally long to provide a comprehensive typing test for users who want to measure their maximum typing speed and accuracy. Regular practice, attention to detail, and patience are required to improve over time consistently. Make sure to focus on each word and character to avoid mistakes during this comprehensive test."
-};
+function generateParagraph() {
 
-// Load paragraph based on selection
-function loadParagraph() {
-  const selected = paragraphSelect.value; 
-  const text = paragraphs[selected];
+  let wordCount = parseInt(wordSelect.value);
+  let words = [];
+
+  while(words.length < wordCount){
+
+    let para = paragraphs[Math.floor(Math.random() * paragraphs.length)];
+
+    words.push(...para.split(" "));
+  }
+
+  currentText = words.slice(0, wordCount).join(" ");
 
   textDisplay.innerHTML = "";
-  text.split("").forEach(char => {
+
+  currentText.split("").forEach(char => {
+
     const span = document.createElement("span");
     span.innerText = char;
+
     textDisplay.appendChild(span);
   });
 
-  inputField.value = "";
-  inputField.disabled = false;
-  timeLeft = TEST_TIME;
-  timeTag.innerText = TEST_TIME;
-  wpmTag.innerText = 0;
-  accuracyTag.innerText = 100;
-  clearInterval(timer);
-  started = false;
+  textDisplay.querySelector("span").classList.add("active");
 }
 
-// Start timer
 function startTimer() {
+
+  if(isTyping) return;
+
+  isTyping = true;
+
+  timeLeft = parseInt(timeSelect.value);
+
   timer = setInterval(() => {
-    timeLeft--;
-    timeTag.innerText = timeLeft;
-    if(timeLeft <= 0) {
+
+    if(timeLeft > 0){
+
+      timeLeft--;
+
+      timeElement.innerText = timeLeft;
+
+      calculateResults();
+
+    }else{
+
       clearInterval(timer);
+
       inputField.disabled = true;
     }
+
   },1000);
 }
 
-// Calculate WPM & Accuracy
-function calculate() {
-  const spans = textDisplay.querySelectorAll("span");
-  const typed = inputField.value;
-  let correct = 0;
+inputField.addEventListener("input", () => {
 
-  spans.forEach((span,index)=>{
-    const char = typed[index];
-    if(!char){
-      span.classList.remove("correct","incorrect");
-    } else if(char === span.innerText){
-      span.classList.add("correct");
-      span.classList.remove("incorrect");
-      correct++;
-    } else {
-      span.classList.add("incorrect");
-      span.classList.remove("correct");
+  startTimer();
+
+  const chars = textDisplay.querySelectorAll("span");
+
+  const typedChars = inputField.value.split("");
+
+  mistakes = 0;
+
+  chars.forEach((char,index) => {
+
+    if(typedChars[index] == null){
+
+      char.classList.remove("correct","wrong");
+
     }
+    else if(typedChars[index] === char.innerText){
+
+      char.classList.add("correct");
+      char.classList.remove("wrong");
+
+    }
+    else{
+
+      char.classList.add("wrong");
+      char.classList.remove("correct");
+
+      mistakes++;
+    }
+
+    char.classList.remove("active");
   });
 
-  const timeSpent = TEST_TIME - timeLeft;
-  const minutes = timeSpent/60;
-  const wpm = minutes>0?Math.round((correct/5)/minutes):0;
-  wpmTag.innerText = wpm;
+  if(chars[typedChars.length]){
 
-  const accuracy = typed.length>0?Math.round((correct/typed.length)*100):100;
-  accuracyTag.innerText = accuracy;
+    chars[typedChars.length].classList.add("active");
+  }
+
+  calculateResults();
+});
+
+function calculateResults(){
+
+  const typedText = inputField.value.trim();
+
+  let wordsTyped = typedText.split(/\s+/).length;
+
+  let wpm = Math.round(
+    (wordsTyped / ((parseInt(timeSelect.value)-timeLeft)/60))
+  );
+
+  if(!isFinite(wpm)) wpm = 0;
+
+  let accuracy = Math.max(
+    0,
+    Math.round(
+      ((typedText.length - mistakes) / typedText.length) * 100
+    )
+  );
+
+  if(!isFinite(accuracy)) accuracy = 100;
+
+  wpmElement.innerText = wpm;
+
+  accuracyElement.innerText = accuracy + "%";
 }
 
-// Event Listeners
-inputField.addEventListener("input",()=>{
-  if(!started){
-    startTimer();
-    started=true;
-  }
-  calculate();
-});
+function restartTest(){
 
-restartBtn.addEventListener("click", loadParagraph);
-paragraphSelect.addEventListener("change", loadParagraph);
-timeSelect.addEventListener("change", ()=>{
-  TEST_TIME = parseInt(timeSelect.value);
-  loadParagraph();
-});
+  clearInterval(timer);
 
-// Initial load
-loadParagraph();
+  isTyping = false;
+
+  inputField.disabled = false;
+
+  inputField.value = "";
+
+  timeLeft = parseInt(timeSelect.value);
+
+  timeElement.innerText = timeLeft;
+
+  wpmElement.innerText = 0;
+
+  accuracyElement.innerText = "100%";
+
+  generateParagraph();
+}
+
+restartBtn.addEventListener("click", restartTest);
+
+startBtn.addEventListener("click", restartTest);
+
+window.onload = restartTest;
