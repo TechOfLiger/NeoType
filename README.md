@@ -1,1 +1,1 @@
-Your site is live at techofliger.github.io/NeoType/
+Your site is live at https://techofliger.github.io/NeoType/
