@@ -1,79 +1,414 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NeoType - Typing Speed Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>TypeX — Advanced Typing Test</title>
 
-  <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="container">
-
-  <div class="top">
-    <h1 class="title">⌨ NeoType</h1>
-
-    <div class="controls">
-
-      <div class="control-box">
-        <label>Time</label>
-        <select id="timeSelect">
-          <option value="60">1 Minute</option>
-          <option value="120">2 Minutes</option>
-          <option value="180">3 Minutes</option>
-        </select>
-      </div>
-
-      <div class="control-box">
-        <label>Words</label>
-        <select id="wordSelect">
-          <option value="20">20 Words</option>
-          <option value="40">40 Words</option>
-          <option value="60">60 Words</option>
-          <option value="80">80 Words</option>
-          <option value="100">100 Words</option>
-        </select>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="text-box" id="textDisplay"></div>
-
-  <textarea id="inputField" placeholder="Start typing here..."></textarea>
-
-  <div class="stats">
-
-    <div class="card">
-      <h2 id="time">60</h2>
-      <p>Seconds Left</p>
+    <div class="background">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="grid"></div>
     </div>
 
-    <div class="card">
-      <h2 id="wpm">0</h2>
-      <p>Words Per Minute</p>
+    <!-- HEADER -->
+    <header class="header">
+
+        <div class="logo">
+            <div class="logo-icon">⌨</div>
+
+            <div>
+                <h1>Type<span>X</span></h1>
+                <p>Master your typing</p>
+            </div>
+        </div>
+
+        <div class="header-actions">
+
+            <button class="icon-btn" id="soundBtn" title="Typing Sound">
+                🔊
+            </button>
+
+            <button class="icon-btn" id="themeBtn" title="Change Theme">
+                🎨
+            </button>
+
+            <button class="icon-btn" id="modeBtn" title="Dark / Light">
+                🌙
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main class="container">
+
+        <!-- DASHBOARD -->
+        <section class="dashboard">
+
+            <div class="stat-card">
+                <span>WPM</span>
+                <strong id="wpm">0</strong>
+                <small>words/min</small>
+            </div>
+
+            <div class="stat-card">
+                <span>Accuracy</span>
+                <strong id="accuracy">100%</strong>
+                <small>precision</small>
+            </div>
+
+            <div class="stat-card">
+                <span>Errors</span>
+                <strong id="errors">0</strong>
+                <small>mistakes</small>
+            </div>
+
+            <div class="stat-card timer-card">
+                <span>Time</span>
+                <strong id="timer">30</strong>
+                <small>seconds</small>
+            </div>
+
+        </section>
+
+
+        <!-- CONTROLS -->
+        <section class="controls">
+
+            <div class="control-group">
+
+                <label>Duration</label>
+
+                <div class="options">
+                    <button class="option active" data-time="15">15s</button>
+                    <button class="option" data-time="30">30s</button>
+                    <button class="option" data-time="60">60s</button>
+                    <button class="option" data-time="120">120s</button>
+                </div>
+
+            </div>
+
+
+            <div class="control-group">
+
+                <label>Difficulty</label>
+
+               <select id="difficulty">
+
+    <option value="easy">
+        Easy
+    </option>
+
+    <option value="medium" selected>
+        Medium
+    </option>
+
+    <option value="hard">
+        Hard
+    </option>
+
+    <option value="expert">
+        Expert
+    </option>
+
+</select>
+
+            </div>
+
+
+            <div class="control-group">
+
+                <label>Mode</label>
+
+                <select id="typingMode">
+
+                    <option value="normal">
+                        Normal
+                    </option>
+
+                    <option value="punctuation">
+                        Punctuation
+                    </option>
+
+                    <option value="numbers">
+                        Numbers
+                    </option>
+
+                </select>
+
+            </div>
+
+        </section>
+
+
+        <!-- PROGRESS -->
+        <div class="progress-container">
+
+            <div class="progress-info">
+                <span>Progress</span>
+                <span id="progressText">0%</span>
+            </div>
+
+            <div class="progress">
+                <div id="progressBar"></div>
+            </div>
+
+        </div>
+
+
+        <!-- TYPING AREA -->
+        <section class="typing-card">
+
+            <div class="typing-header">
+
+                <div class="live-indicator">
+                    <span></span>
+                    LIVE TEST
+                </div>
+
+                <div class="characters">
+                    <span id="charCount">0</span>
+                    /
+                    <span id="totalChars">0</span>
+                </div>
+
+            </div>
+
+
+            <div
+                class="text-display"
+                id="textDisplay"
+            ></div>
+
+
+            <textarea
+                id="typingInput"
+                placeholder="Start typing here..."
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+            ></textarea>
+
+
+            <div class="typing-footer">
+
+                <div class="hint">
+                    <kbd>Tab</kbd>
+                    Restart
+                </div>
+
+                <div class="hint">
+                    <kbd>Esc</kbd>
+                    Reset
+                </div>
+
+                <div class="hint">
+                    <kbd>Space</kbd>
+                    Continue
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ACTION -->
+        <div class="action-area">
+
+            <button id="restartBtn" class="restart-btn">
+                <span>↻</span>
+                Restart Test
+            </button>
+
+        </div>
+
+
+        <!-- BEST SCORE -->
+        <section class="best-section">
+
+            <div class="section-title">
+                <div>
+                    <h2>Your Best</h2>
+                    <p>Keep improving every day.</p>
+                </div>
+
+                <div class="best-badge">
+                    🏆 Personal Best
+                </div>
+            </div>
+
+
+            <div class="best-grid">
+
+                <div class="best-card">
+                    <span>Best WPM</span>
+                    <strong id="bestWpm">0</strong>
+                </div>
+
+                <div class="best-card">
+                    <span>Best Accuracy</span>
+                    <strong id="bestAccuracy">0%</strong>
+                </div>
+
+                <div class="best-card">
+                    <span>Tests Completed</span>
+                    <strong id="testsCompleted">0</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- HISTORY -->
+        <section class="history-section">
+
+            <div class="section-title">
+
+                <div>
+                    <h2>Recent Performance</h2>
+                    <p>Your latest typing sessions.</p>
+                </div>
+
+                <button id="clearHistory">
+                    Clear History
+                </button>
+
+            </div>
+
+
+            <div class="history-list" id="historyList">
+
+                <div class="empty-history">
+                    No tests completed yet.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- TIPS -->
+        <section class="tips">
+
+            <h2>💡 Typing Tips</h2>
+
+            <div class="tips-grid">
+
+                <div class="tip">
+                    <span>01</span>
+                    <h3>Don't Look Down</h3>
+                    <p>
+                        Train your fingers to find keys naturally.
+                    </p>
+                </div>
+
+                <div class="tip">
+                    <span>02</span>
+                    <h3>Accuracy First</h3>
+                    <p>
+                        Speed comes naturally when your accuracy improves.
+                    </p>
+                </div>
+
+                <div class="tip">
+                    <span>03</span>
+                    <h3>Stay Relaxed</h3>
+                    <p>
+                        Keep your hands relaxed and avoid unnecessary tension.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- RESULT MODAL -->
+    <div class="modal" id="resultModal">
+
+        <div class="result-card">
+
+            <button class="close-btn" id="closeModal">
+                ×
+            </button>
+
+            <div class="result-icon">
+                🏆
+            </div>
+
+            <h2>Test Complete!</h2>
+
+            <p class="result-message" id="resultMessage">
+                Great job!
+            </p>
+
+
+            <div class="result-stats">
+
+                <div>
+                    <span>WPM</span>
+                    <strong id="resultWpm">0</strong>
+                </div>
+
+                <div>
+                    <span>Accuracy</span>
+                    <strong id="resultAccuracy">0%</strong>
+                </div>
+
+                <div>
+                    <span>Characters</span>
+                    <strong id="resultChars">0</strong>
+                </div>
+
+            </div>
+
+
+            <div class="score-ring">
+
+                <div>
+                    <span>Score</span>
+                    <strong id="resultScore">0</strong>
+                </div>
+
+            </div>
+
+
+            <button class="result-restart" id="resultRestart">
+                Try Again
+            </button>
+
+        </div>
+
     </div>
 
-    <div class="card">
-      <h2 id="accuracy">100%</h2>
-      <p>Accuracy</p>
-    </div>
 
-  </div>
+    <footer>
+        <p>
+            TypeX © 2026 · Built to make you faster ⚡
+        </p>
+    </footer>
 
-  <div class="buttons">
-    <button class="start" id="startBtn">Start Test</button>
-    <button class="restart" id="restartBtn">Restart</button>
-  </div>
 
-</div>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 
 </body>
 </html>
